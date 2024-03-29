@@ -1,12 +1,19 @@
 --scoresheet cool--
-
 local mod = RegisterMod("Scoresheet in Vanilla", 1)
 
-if not REPENTOGON then
-	mod:AddCallback(ModCallbacks.MC_POST_RENDER, function ()
-		
-	end)
-	return
+local isRepentance, isRepentogon =  REPENTANCE, (REPENTOGON or _G._VERSION == "Lua 5.4")
+local errMessage = ""
+if not isRepentance or not isRepentogon then
+    if not isRepentance then
+        errMessage = "Scoresheet in Vanilla mod requires Repentance DLC to work"
+    elseif not isRepentogon then
+        errMessage = "Scoresheet in Vanilla mod requires Repentogon Script Extender to work. Head to https://repentogon.com/"
+    end
+
+    mod:AddCallback(ModCallbacks.MC_POST_RENDER, function ()
+        Isaac.RenderScaledText(errMessage, 200, 50, 0.5, 0.5, 1, 0, 0, 1)
+    end)
+    return
 end
 
 local game = Game()
@@ -15,6 +22,15 @@ local imgui = ImGui
 
 local currentDestination = 1
 
+local destinationsConf = {
+	{CompletionType.ISAAC, Ending.ISAAC},
+	{CompletionType.SATAN, Ending.SATAN},
+	{CompletionType.BLUE_BABY,Ending.BLUE_BABY},
+	{CompletionType.LAMB, Ending.LAMB},
+	{CompletionType.MEGA_SATAN, Ending.MEGA_SATAN},
+}
+
+--wrapper by catinsurance
 ---@param elementId string
 ---@param createFunc function
 local function createElement(elementId, createFunc, ...)
@@ -31,23 +47,25 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, continued)
 		local rng = RNG()
 		rng:SetSeed(game:GetSeeds():GetStartSeed(), 66)
 
-		currentDestination = rng:RandomInt(0, 3)
+		currentDestination = rng:RandomInt(1, 5)
 
-		imgui.UpdateData("ScoresheetMenuSettingsDestination", ImGuiData.Value, currentDestination)
+		imgui.UpdateData("ScoresheetMenuSettingsDestination", ImGuiData.Value, currentDestination - 1)
 	end
 end)
 
 local shouldRenderScoreSheet = false
 mod:AddCallback(ModCallbacks.MC_PRE_COMPLETION_EVENT, function(_, compType, player)
-	local level = Game():GetLevel()
-	print("hey hey hey")
-	if compType > 0 and compType ~= CompletionType.BOSS_RUSH then
-		print("heyo")
-		ss.SetRunEnding(7)
-		ss.AddFinishedStage(level:GetStage(), level:GetStageType(), Game().TimeCounter)
-		ss.Calculate()
-		Game():ShowGenericLeaderboard()
-		shouldRenderScoreSheet = true
+	local level = game:GetLevel()
+	--print("hey hey hey", compType, destinationsConf[currentDestination][1]) 
+	if not game:IsGreedMode() and compType > 0 and compType ~= CompletionType.BOSS_RUSH then
+		if compType == destinationsConf[currentDestination][1] then
+			--print("heyo")
+			ss.SetRunEnding(destinationsConf[currentDestination][2])
+			ss.AddFinishedStage(level:GetStage(), level:GetStageType(), game.TimeCounter)
+			ss.Calculate()
+			game:ShowGenericLeaderboard()
+			--shouldRenderScoreSheet = true
+		end
 	end
 end)
 
@@ -67,7 +85,7 @@ end
 createElement(
 	"ScoresheetMenuItemSettings",
 	imgui.AddElement,
-	"ScoresheetMenu", "ScoresheetMenuItemSettings", ImGuiElement.MenuItem, "Settings"
+	"ScoresheetMenu", "ScoresheetMenuItemSettings", ImGuiElement.MenuItem, " \u{f013}Settings"
 )
 
 imgui.CreateWindow("ScoresheetMenuSettings", "Destination Settings")
@@ -77,9 +95,15 @@ createElement(
 	"ScoresheetMenuSettingsDestination",
 	imgui.AddCombobox,
 	"ScoresheetMenuSettings", "ScoresheetMenuSettingsDestination", "Destination", function (index, val)
-		currentDestination = index
+		--print("that label changed", index, val)
+		currentDestination = index + 1
+		--print(currentDestination, index)
 	end, {
-		"Mom", "Mom's Heart", "Deez", "Nuts"
+		"Isaac",
+		"Satan",
+		"Blue Baby",
+		"Lamb",
+		"Mega Satan",
 	},
 	0
 )
@@ -101,6 +125,7 @@ createElement(
 end)]]
 
 imgui.AddCallback("ScoresheetMenuDestinationRandom", ImGuiCallback.Clicked, function (a)
-	print("that button was clicked")
-	imgui.UpdateData("ScoresheetMenuSettingsDestination", ImGuiData.Value, math.random(0, 3))
+	local targetDestination = math.random(0,4)
+	imgui.UpdateData("ScoresheetMenuSettingsDestination", ImGuiData.Value, targetDestination)
+	currentDestination = targetDestination + 1
 end)
