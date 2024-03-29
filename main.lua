@@ -85,7 +85,7 @@ end
 createElement(
 	"ScoresheetMenuItemSettings",
 	imgui.AddElement,
-	"ScoresheetMenu", "ScoresheetMenuItemSettings", ImGuiElement.MenuItem, " \u{f013}Settings"
+	"ScoresheetMenu", "ScoresheetMenuItemSettings", ImGuiElement.MenuItem, "\u{f013} Settings"
 )
 
 imgui.CreateWindow("ScoresheetMenuSettings", "Destination Settings")
