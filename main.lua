@@ -43,7 +43,7 @@ end
 
 ---@param continued boolean
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, continued)
-	if not continued then
+	if not continued and not game:IsGreedMode() and game.Challenge == Challenge.CHALLENGE_NULL then
 		local rng = RNG()
 		rng:SetSeed(game:GetSeeds():GetStartSeed(), 66)
 
@@ -57,7 +57,7 @@ local shouldRenderScoreSheet = false
 mod:AddCallback(ModCallbacks.MC_PRE_COMPLETION_EVENT, function(_, compType, player)
 	local level = game:GetLevel()
 	--print("hey hey hey", compType, destinationsConf[currentDestination][1]) 
-	if not game:IsGreedMode() and compType > 0 and compType ~= CompletionType.BOSS_RUSH then
+	if not game:IsGreedMode() and game.Challenge == Challenge.CHALLENGE_NULL and compType > 0 and compType ~= CompletionType.BOSS_RUSH then
 		if compType == destinationsConf[currentDestination][1] then
 			--print("heyo")
 			ss.SetRunEnding(destinationsConf[currentDestination][2])
