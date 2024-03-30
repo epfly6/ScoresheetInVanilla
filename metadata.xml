@@ -2,13 +2,13 @@
 <metadata>
     <name>Scoresheet in Vanilla Runs</name>
     <directory>scoresheetinvanilla</directory>
-    <id>0</id>
+    <id>3206833441</id>
     <description>[url=repentogon.com]REPENTOGON[/url] mod required to work with this mod!
 
 A scoresheet from daily runs will now appear when you beat the major bosses (currently Isaac, Satan, The Lamb, ???/Blue Baby, Mega Satan is supported)
 
 The goal is set randomly at the start of a new run, which can be changed in ImGui bar -&gt; Scoresheet -&gt; Settings window</description>
-    <version>1.0</version>
+    <version>1.1</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
