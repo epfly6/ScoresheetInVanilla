@@ -8,7 +8,7 @@
 A scoresheet from daily runs will now appear when you beat the major bosses (currently Isaac, Satan, The Lamb, ???/Blue Baby, Mega Satan is supported)
 
 The goal is set randomly at the start of a new run, which can be changed in ImGui bar -&gt; Scoresheet -&gt; Settings window</description>
-    <version>1.2</version>
+    <version>1.3</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
