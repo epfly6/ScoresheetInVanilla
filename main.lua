@@ -1,7 +1,7 @@
 --scoresheet cool--
 local mod = RegisterMod("Scoresheet in Vanilla", 1)
 
-local isRepentance, isRepentogon =  REPENTANCE, (REPENTOGON or _G._VERSION == "Lua 5.4")
+local isRepentance, isRepentogon = REPENTANCE_PLUS or REPENTANCE, (REPENTOGON or _G._VERSION == "Lua 5.4")
 local errMessage = ""
 if not isRepentance or not isRepentogon then
     if not isRepentance then
